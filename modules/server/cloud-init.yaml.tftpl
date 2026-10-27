@@ -1,0 +1,93 @@
+#cloud-config
+# Bootstrap d'un nœud k3s tout-en-un. Rejoué à chaque recréation de l'instance :
+# toute modification de ce fichier remplace le serveur (cattle, pas pet).
+hostname: ${hostname}
+preserve_hostname: false
+timezone: Etc/UTC
+
+users:
+  - name: ${admin_username}
+    groups: [sudo]
+    shell: /bin/bash
+    lock_passwd: true
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    ssh_authorized_keys: ${ssh_public_keys}
+
+disable_root: true
+ssh_pwauth: false
+
+package_update: true
+package_upgrade: true
+packages:
+  - ca-certificates
+  - curl
+  - fail2ban
+  - unattended-upgrades
+
+write_files:
+  - path: /etc/ssh/sshd_config.d/10-tramelya.conf
+    permissions: "0644"
+    content: |
+      PermitRootLogin no
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      PubkeyAuthentication yes
+      AllowUsers ${admin_username}
+      MaxAuthTries 3
+      X11Forwarding no
+      AllowAgentForwarding no
+  - path: /etc/apt/apt.conf.d/20auto-upgrades
+    permissions: "0644"
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+      APT::Periodic::AutocleanInterval "7";
+  # Pas de redémarrage automatique : un reboot pendant une démo coûte plus cher
+  # qu'un correctif noyau appliqué au prochain redémarrage manuel.
+  - path: /etc/apt/apt.conf.d/52tramelya-unattended
+    permissions: "0644"
+    content: |
+      Unattended-Upgrade::Automatic-Reboot "false";
+      Unattended-Upgrade::Remove-Unused-Dependencies "true";
+  - path: /etc/fail2ban/jail.d/sshd.local
+    permissions: "0644"
+    content: |
+      [sshd]
+      enabled = true
+      backend = systemd
+      maxretry = 5
+      findtime = 10m
+      bantime = 1h
+  # L'API Kubernetes (6443) n'est PAS ouverte sur Internet : accès par tunnel SSH.
+  - path: /etc/rancher/k3s/config.yaml
+    permissions: "0600"
+    content: |
+      node-name: ${hostname}
+      write-kubeconfig-mode: "0600"
+      secrets-encryption: true
+      kubelet-arg:
+        - "system-reserved=cpu=250m,memory=512Mi"
+        - "kube-reserved=cpu=250m,memory=512Mi"
+        - "eviction-hard=memory.available<300Mi"
+  - path: /usr/local/sbin/tramelya-bootstrap-report
+    permissions: "0755"
+    content: |
+      #!/bin/sh
+      # Mesure de la mémoire libre après k3s (PLAN phase 4.1). Relançable à la main.
+      {
+        date -u
+        echo "--- free -m"; free -m
+        echo "--- k3s"; k3s --version
+        echo "--- nodes"; k3s kubectl get nodes -o wide
+        echo "--- pods"; k3s kubectl get pods -A
+        echo "--- top"; k3s kubectl top node 2>/dev/null || echo "metrics-server pas encore prêt"
+      } > /var/log/tramelya-bootstrap.log 2>&1
+
+runcmd:
+  - [systemctl, restart, ssh]
+  - [systemctl, enable, --now, fail2ban]
+  - [sh, -c, "curl -sfL https://get.k3s.io -o /root/k3s-install.sh"]
+  - [sh, -c, "INSTALL_K3S_CHANNEL=${k3s_channel} sh /root/k3s-install.sh"]
+  - [sh, -c, "for i in $(seq 1 60); do k3s kubectl get nodes 2>/dev/null | grep -q ' Ready' && break; sleep 5; done; sleep 60; /usr/local/sbin/tramelya-bootstrap-report"]
+
+final_message: "tramelya bootstrap done after $UPTIME s"

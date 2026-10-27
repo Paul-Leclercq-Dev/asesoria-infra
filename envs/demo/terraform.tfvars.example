@@ -1,0 +1,6 @@
+# Copier en terraform.tfvars (ignoré par Git). Rien de secret ici, mais rien
+# de public non plus (IP personnelle).
+ovh_project_id        = "00000000000000000000000000000000"
+cloudflare_account_id = "00000000000000000000000000000000"
+ssh_public_keys       = ["ssh-ed25519 AAAA... paul@mac"]
+admin_cidrs           = ["203.0.113.10/32"]
