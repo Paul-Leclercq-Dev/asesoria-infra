@@ -45,7 +45,7 @@ resource "ovh_cloud_project_user_s3_credential" "tf_state" {
 resource "ovh_cloud_project_user_s3_policy" "tf_state" {
   service_name = var.ovh_project_id
   user_id      = ovh_cloud_project_user.tf_state.id
-  policy       = jsonencode({
+  policy = jsonencode({
     Statement = [{
       Sid    = "TerraformStateOnly"
       Effect = "Allow"
@@ -69,7 +69,7 @@ resource "ovh_cloud_project_user_s3_policy" "tf_state" {
 resource "ovh_cloud_project_user" "tf_openstack" {
   service_name = var.ovh_project_id
   description  = "tramelya: Terraform envs (instances, reseau, groupes de securite)"
-  role_names   = [
+  role_names = [
     "compute_operator",
     "network_operator",
     "network_security_operator",
