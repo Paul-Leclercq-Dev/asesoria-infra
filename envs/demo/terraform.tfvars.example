@@ -3,4 +3,6 @@
 ovh_project_id        = "00000000000000000000000000000000"
 cloudflare_account_id = "00000000000000000000000000000000"
 ssh_public_keys       = ["ssh-ed25519 AAAA... paul@mac"]
-admin_cidrs           = ["203.0.113.10/32"]
+# SSH depuis partout (portable) : l'accès reste réservé à la clé SSH.
+# Pour restreindre à des IP fixes : ["203.0.113.10/32"]
+admin_cidrs = ["0.0.0.0/0"]

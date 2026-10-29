@@ -26,7 +26,7 @@ variable "ssh_public_keys" {
 }
 
 variable "admin_cidrs" {
-  description = "IPv4 publiques autorisées en SSH, en /32 (curl -4 ifconfig.me)."
+  description = "IPv4 autorisées en SSH. [\"0.0.0.0/0\"] = depuis partout (portable), protégé par clé SSH + fail2ban ; sinon des /32."
   type        = list(string)
 }
 

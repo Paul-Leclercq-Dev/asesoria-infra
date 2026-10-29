@@ -15,6 +15,8 @@
 8. **Pas de `terraform plan` en CI pour l'instant** : le dépôt est public et OVHcloud n'offre pas de fédération OIDC pour GitHub Actions ; y stocker des identifiants cloud n'est pas justifié pour une démo. Les plans se font en local ; à revoir avec un runner auto-hébergé ou des identifiants en lecture seule.
 9. **Domaines** : `tramelya.es` (application) et `tramelya.com` (réservé). SPF `-all` + DMARC `reject` tant qu'aucun e-mail n'est envoyé depuis ces domaines.
 
+10. **SSH ouvert à toutes les IP** (2026-10-29) : l'administrateur travaille sur un portable qui change de réseau ; restreindre le port 22 à une IP fixe le bloquerait. Compensations : authentification par clé uniquement (mot de passe et root refusés, `AllowUsers deploy`), fail2ban, mises à jour de sécurité automatiques. Risque résiduel : une faille d'OpenSSH avant correctif. Cible : **Cloudflare Tunnel + Access** (aucun port entrant, authentification par Cloudflare), à étudier en 4.2 ou lors du durcissement.
+
 ## Conséquences
 
 - Deux jeux d'identifiants à gérer (OVH bootstrap, OpenStack + S3 pour les environnements), rangés dans le gestionnaire de mots de passe, chargés par `.env` ignoré par Git.

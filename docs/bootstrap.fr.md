@@ -135,6 +135,6 @@ terraform apply                             # recrée tout le serveur (~5 min) p
 
 Le crédit FREETRIAL (200 €) expire 1 mois après activation : au-delà, la facturation est réelle (d2-8 ≈ 20 €/mois s'il tourne en continu).
 
-## Si l'adresse IP de la maison change
+## Accès SSH depuis plusieurs lieux
 
-Mettre à jour `admin_cidrs` dans `terraform.tfvars`, puis `terraform apply` (seules les règles SSH changent).
+Par défaut `admin_cidrs = ["0.0.0.0/0"]` : SSH accepté depuis n'importe quel réseau, mais uniquement avec la clé `~/.ssh/tramelya_ed25519` (ADR-001 §10). Pour restreindre à des IP fixes, mettre des `/32` dans `terraform.tfvars`, puis `terraform apply` (seules les règles SSH changent).

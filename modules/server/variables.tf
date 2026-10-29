@@ -37,12 +37,12 @@ variable "ssh_public_keys" {
 }
 
 variable "admin_cidrs" {
-  description = "Plages IPv4 autorisées en SSH (ex. [\"203.0.113.10/32\"])."
+  description = "Plages IPv4 autorisées en SSH : des /32 précis, ou [\"0.0.0.0/0\"] pour un poste mobile (accès par clé uniquement, voir ADR-001 §10)."
   type        = list(string)
 
   validation {
-    condition     = length(var.admin_cidrs) > 0 && alltrue([for c in var.admin_cidrs : can(cidrnetmask(c)) && c != "0.0.0.0/0"])
-    error_message = "Au moins un CIDR IPv4 précis ; 0.0.0.0/0 est refusé."
+    condition     = length(var.admin_cidrs) > 0 && alltrue([for c in var.admin_cidrs : can(cidrnetmask(c))])
+    error_message = "Au moins un CIDR IPv4 valide (ex. 203.0.113.10/32 ou 0.0.0.0/0)."
   }
 }
 

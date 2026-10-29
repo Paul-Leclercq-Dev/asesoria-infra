@@ -22,7 +22,7 @@ docs/                       # ADRs and runbooks
 Design choices are in [`docs/adr/001-demo-platform.md`](docs/adr/001-demo-platform.md).
 Step-by-step bootstrap (French): [`docs/bootstrap.fr.md`](docs/bootstrap.fr.md).
 
-Security posture of the demo node: no inbound port except 22 (admin IPs) and 443 (Cloudflare only);
+Security posture of the demo node: no inbound port except 22 (SSH keys only, password and root login disabled, fail2ban) and 443 (Cloudflare only);
 the Kubernetes API (6443) is never exposed and is reached through an SSH tunnel.
 
 GitOps (Argo CD), Helm charts, cert-manager and SOPS come next, in `asesoria-gitops`.
