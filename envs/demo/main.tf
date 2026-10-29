@@ -28,9 +28,14 @@ locals {
         comment = "Application (demo)"
       }
     } : {}
-    # .com : zone réservée (marque), aucune entrée applicative pour l'instant.
+    # .com : marque + e-mail (Google Workspace, à venir) ; aucune entrée applicative.
     "tramelya.com" = {}
   }
+
+  # Domaines qui ENVOIENT des e-mails : pas de SPF « -all » ni de DMARC « reject »
+  # (ils bloqueraient nos propres e-mails). Leurs entrées mail (MX, SPF, DKIM, DMARC)
+  # seront ajoutées ici, dans `records`, lors de la mise en place de Google Workspace.
+  mail_domains = ["tramelya.com"]
 }
 
 module "zone" {
@@ -41,4 +46,5 @@ module "zone" {
   name       = each.key
   ssl_mode   = var.ssl_mode
   records    = each.value
+  no_mail    = !contains(local.mail_domains, each.key)
 }

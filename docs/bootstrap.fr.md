@@ -70,12 +70,7 @@ Cloudflare → *My Profile* → *API Tokens* → *Create Custom Token* :
 
 Récupérer aussi l'**Account ID** (page d'accueil du compte, colonne de droite, ou URL `dash.cloudflare.com/<ACCOUNT_ID>`).
 
-⚠️ **Ne pas ajouter les domaines à la main dans Cloudflare** : Terraform crée les zones. S'ils y sont déjà, les importer (étape 4, après `init`) :
-
-```bash
-terraform import 'module.zone["tramelya.es"].cloudflare_zone.this' <ZONE_ID_ES>
-terraform import 'module.zone["tramelya.com"].cloudflare_zone.this' <ZONE_ID_COM>
-```
+Les zones `tramelya.com` et `tramelya.es` existaient déjà dans Cloudflare (créées à la main) : elles sont reprises par les blocs `import` de `envs/demo/imports.tf` au premier `apply`. Avant cela, supprimer à la main les entrées recopiées depuis OVH (page de parking `213.186.33.5`, `ftp`, TXT `1|…` / `3|welcome`, et pour `.es` tout le reste) : Terraform ne gère que les entrées qu'il a créées, et deux SPF sur un même domaine sont invalides.
 
 ## 4. Environnement de démo : serveur k3s + DNS
 
