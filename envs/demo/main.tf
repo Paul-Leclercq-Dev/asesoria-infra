@@ -29,13 +29,25 @@ locals {
         comment = "Application (demo)"
       }
     } : {}
-    # .com : marque + e-mail (Google Workspace, à venir) ; aucune entrée applicative.
-    "tramelya.com" = {}
+    # .com : marque + e-mail ENTRANT (Email Routing, voir email.tf) ; aucune entrée applicative.
+    "tramelya.com" = {
+      # Personne n'envoie encore d'e-mail en @tramelya.com : on rejette les usurpations.
+      # Sans effet sur le transfert (le DMARC appliqué est celui de l'expéditeur
+      # d'origine). Alignement souple : un futur SMTP d'envoi (sous-domaine de
+      # rebond) restera aligné ; passer à p=none le temps de le mettre en place.
+      dmarc = {
+        name    = "_dmarc"
+        type    = "TXT"
+        content = "v=DMARC1; p=reject; sp=reject"
+        ttl     = 3600
+        comment = "Rejet des e-mails usurpant ce domaine (aucun envoi pour l'instant)"
+      }
+    }
   }
 
-  # Domaines qui ENVOIENT des e-mails : pas de SPF « -all » ni de DMARC « reject »
-  # (ils bloqueraient nos propres e-mails). Leurs entrées mail (MX, SPF, DKIM, DMARC)
-  # seront ajoutées ici, dans `records`, lors de la mise en place de Google Workspace.
+  # Domaines qui REÇOIVENT des e-mails : le module ne publie ni SPF « -all » ni
+  # DMARC. Le SPF (et les MX, DKIM) est publié par Cloudflare Email Routing ;
+  # un second SPF rendrait les deux invalides. Le DMARC est déclaré ci-dessus.
   mail_domains = ["tramelya.com"]
 }
 
