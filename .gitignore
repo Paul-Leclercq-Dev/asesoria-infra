@@ -20,3 +20,5 @@ terraform.rc
 *.kubeconfig
 kubeconfig*
 tfplan
+# Archives de livraison (extraites puis commitées)
+.backup/

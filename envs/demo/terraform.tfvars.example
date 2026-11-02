@@ -6,3 +6,5 @@ ssh_public_keys       = ["ssh-ed25519 AAAA... paul@mac"]
 # SSH depuis partout (portable) : l'accès reste réservé à la clé SSH.
 # Pour restreindre à des IP fixes : ["203.0.113.10/32"]
 admin_cidrs = ["0.0.0.0/0"]
+# Boîte qui reçoit contact@tramelya.com (Cloudflare Email Routing).
+contact_forward_to = "prenom.nom@example.com"

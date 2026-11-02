@@ -25,5 +25,6 @@ provider "openstack" {
   project_domain_name = "Default"
 }
 
-# Identifiant : CLOUDFLARE_API_TOKEN (Zone:Edit, Zone Settings:Edit, DNS:Edit sur le compte).
+# Identifiant : CLOUDFLARE_API_TOKEN (Zone:Edit, Zone Settings:Edit, DNS:Edit,
+# Email Routing Rules:Edit sur les zones ; Email Routing Addresses:Edit sur le compte).
 provider "cloudflare" {}

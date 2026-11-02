@@ -64,7 +64,7 @@ Si `init` échoue sur le verrou (`use_lockfile`, erreur de type *PreconditionFai
 
 Cloudflare → *My Profile* → *API Tokens* → *Create Custom Token* :
 
-- Permissions : `Zone · Zone · Edit`, `Zone · Zone Settings · Edit`, `Zone · DNS · Edit`
+- Permissions : `Zone · Zone · Edit`, `Zone · Zone Settings · Edit`, `Zone · DNS · Edit`, `Zone · Email Routing Rules · Edit`, `Account · Email Routing Addresses · Edit` (e-mail, voir `email.fr.md`)
 - Account Resources : *Include* → ton compte ; Zone Resources : *Include* → *All zones from an account* → ton compte
 - Nom `tramelya-terraform`, pas d'expiration ou 1 an
 

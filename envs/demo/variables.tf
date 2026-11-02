@@ -42,6 +42,17 @@ variable "ssl_mode" {
   default     = "full"
 }
 
+variable "contact_forward_to" {
+  description = "Boîte qui reçoit les e-mails de contact@tramelya.com. Donnée personnelle : seulement dans terraform.tfvars (ignoré par Git), jamais dans le dépôt."
+  type        = string
+  sensitive   = true
+
+  validation {
+    condition     = can(regex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", var.contact_forward_to)) && !endswith(lower(var.contact_forward_to), "@tramelya.com")
+    error_message = "Une adresse e-mail complète, hors tramelya.com (transférer contact@ vers le même domaine ferait une boucle)."
+  }
+}
+
 variable "server_enabled" {
   description = "false = serveur détruit (plus aucun coût de calcul), zones DNS conservées."
   type        = bool
