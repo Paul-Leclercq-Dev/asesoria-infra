@@ -19,3 +19,4 @@ terraform.rc
 !.env.example
 *.kubeconfig
 kubeconfig*
+tfplan
