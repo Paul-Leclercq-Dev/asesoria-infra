@@ -17,9 +17,10 @@ locals {
 # Routing, pas à `cloudflare_dns_record`. Le détruire désactive le routage et les retire.
 # (`cloudflare_email_routing_settings` n'est pas utilisé : il appelle une route
 # d'API dépréciée, `POST /email/routing/enable`.)
+# Pas de `name` : l'API le lit comme un SOUS-domaine à activer ; le domaine
+# lui-même y est refusé (erreur 2007 « must be a subdomains of »).
 resource "cloudflare_email_routing_dns" "mail" {
   zone_id = module.zone[local.mail_zone].zone_id
-  name    = local.mail_zone
 }
 
 # Boîte de destination, déclarée au niveau du COMPTE Cloudflare (partageable
