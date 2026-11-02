@@ -4,13 +4,13 @@ variable "ovh_project_id" {
 }
 
 variable "region" {
-  description = "Région OVHcloud des instances (Gravelines : données dans l'UE)."
+  description = "Région OVHcloud des instances (UE). SBG7 (Strasbourg) : GRA11 refusait les d2-8 (« No valid host », ADR-001 §11)."
   type        = string
-  default     = "GRA11"
+  default     = "SBG7"
 }
 
 variable "flavor_name" {
-  description = "d2-8 (4 vCore, 8 Go) par défaut ; d2-4 si le budget l'impose (Flux au lieu d'Argo CD)."
+  description = "d2-8 (4 vCore, 8 Go) : 6,5 Go libres après k3s, assez pour Argo CD. d2-4 si le budget l'impose (Flux au lieu d'Argo CD)."
   type        = string
   default     = "d2-8"
 }

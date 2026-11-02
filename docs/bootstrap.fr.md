@@ -133,7 +133,7 @@ terraform apply -var server_enabled=false   # serveur + entrée app supprimés ;
 terraform apply                             # recrée tout le serveur (~5 min) pour une démo
 ```
 
-Le crédit FREETRIAL (200 €) expire 1 mois après activation : au-delà, la facturation est réelle (d2-8 ≈ 20 €/mois s'il tourne en continu).
+Le crédit FREETRIAL (200 €) expire 1 mois après activation : au-delà, la facturation est réelle (d2-8 + IP publique ≈ 0,04 € HT/h, soit ≈ 29 € HT/mois s'il tourne en continu ; le budget de 25 €/mois suppose de l'éteindre hors démos).
 
 ## Accès SSH depuis plusieurs lieux
 

@@ -5,7 +5,7 @@ Public on purpose: it is the DevOps part of the project. No secret lives here.
 
 | Layer | Tool |
 |---|---|
-| Cloud (EU) | OVHcloud Public Cloud, Gravelines (`GRA11`) — OpenStack provider for compute/network, OVH provider for project users and S3 |
+| Cloud (EU) | OVHcloud Public Cloud, Strasbourg (`SBG7`) — OpenStack provider for compute/network, OVH provider for project users and S3 |
 | DNS / edge | Cloudflare (proxied records, origin reachable only from Cloudflare IP ranges) |
 | Remote state | OVHcloud Object Storage (S3), versioned, encrypted, native S3 lock, dedicated least-privilege user |
 | Node bootstrap | cloud-init: non-root admin, SSH keys only, fail2ban, unattended upgrades, **k3s** |

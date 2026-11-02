@@ -5,7 +5,7 @@
 
 ## Décisions
 
-1. **OVHcloud Public Cloud, région GRA11 (UE)**, instance Discovery `d2-8` à l'heure. OVH VPS écarté (cycle de vie non pilotable proprement par Terraform). Hetzner écarté (hausses 2026).
+1. **OVHcloud Public Cloud, région SBG7 (Strasbourg, UE)** (GRA11 au départ, voir §11), instance Discovery `d2-8` à l'heure. OVH VPS écarté (cycle de vie non pilotable proprement par Terraform). Hetzner écarté (hausses 2026).
 2. **Provider OpenStack pour le calcul et le réseau** (instance, groupe de sécurité), **provider OVH pour ce qui est propre au projet** (utilisateurs, stockage S3, policies S3). Raison : les groupes de sécurité n'existent que côté OpenStack ; c'est aussi la voie documentée par OVHcloud.
 3. **Racine `bootstrap/` séparée** : bucket du state (versionné, chiffré, `prevent_destroy`), un utilisateur S3 limité par policy à ce seul bucket, un utilisateur OpenStack limité à `compute_operator`, `network_operator`, `network_security_operator`. Premier passage en state local, puis migration du state dans le bucket qu'il crée. Le jeton d'API OVH (droits limités à `/cloud/project/<id>/*`) ne sert qu'à cette racine.
 4. **State distant S3 OVH**, verrou natif (`use_lockfile`, Terraform ≥ 1.10). Repli documenté si OVH ne gère pas l'écriture conditionnelle : verrou désactivé (un seul opérateur).
@@ -16,6 +16,8 @@
 9. **Domaines** : `tramelya.es` (application) et `tramelya.com` (réservé). SPF `-all` + DMARC `reject` tant qu'aucun e-mail n'est envoyé depuis ces domaines.
 
 10. **SSH ouvert à toutes les IP** (2026-10-29) : l'administrateur travaille sur un portable qui change de réseau ; restreindre le port 22 à une IP fixe le bloquerait. Compensations : authentification par clé uniquement (mot de passe et root refusés, `AllowUsers deploy`), fail2ban, mises à jour de sécurité automatiques. Risque résiduel : une faille d'OpenSSH avant correctif. Cible : **Cloudflare Tunnel + Access** (aucun port entrant, authentification par Cloudflare), à étudier en 4.2 ou lors du durcissement.
+
+11. **Région SBG7 au lieu de GRA11** (2026-11-02) : en GRA11, toute création de `d2-8` échouait (« No valid host was found », code 500), par Terraform comme par l'espace client, alors que l'offre y était affichée disponible ; SBG7 fonctionne. La région est écrite sur chaque ressource OpenStack (et pas seulement sur le provider) : sans cela, changer de région ne recrée rien, chaque ressource gardant celle mémorisée dans le state. Mesures du premier `apply` complet : 52 s, nœud k3s `Ready` en ≈ 1 min, 6,5 Go de mémoire disponibles, k3s ≈ 0,8 Go.
 
 ## Conséquences
 

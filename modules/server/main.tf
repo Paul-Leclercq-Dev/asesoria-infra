@@ -3,6 +3,7 @@
 # - 443/tcp depuis Cloudflare (le DNS est proxifié, l'origine n'est jamais exposée en direct).
 # Pas de 80 (HTTPS forcé chez Cloudflare, certificats en DNS-01) ni de 6443 (tunnel SSH).
 resource "openstack_networking_secgroup_v2" "this" {
+  region               = var.region
   name                 = "${var.name}-sg"
   description          = "tramelya ${var.name} : SSH admin + HTTPS Cloudflare"
   delete_default_rules = true
@@ -11,6 +12,7 @@ resource "openstack_networking_secgroup_v2" "this" {
 resource "openstack_networking_secgroup_rule_v2" "egress" {
   for_each = toset(["IPv4", "IPv6"])
 
+  region            = var.region
   security_group_id = openstack_networking_secgroup_v2.this.id
   direction         = "egress"
   ethertype         = each.value
@@ -19,6 +21,7 @@ resource "openstack_networking_secgroup_rule_v2" "egress" {
 resource "openstack_networking_secgroup_rule_v2" "ssh" {
   for_each = toset(var.admin_cidrs)
 
+  region            = var.region
   security_group_id = openstack_networking_secgroup_v2.this.id
   direction         = "ingress"
   ethertype         = "IPv4"
@@ -32,6 +35,7 @@ resource "openstack_networking_secgroup_rule_v2" "ssh" {
 resource "openstack_networking_secgroup_rule_v2" "https" {
   for_each = toset(var.https_cidrs)
 
+  region            = var.region
   security_group_id = openstack_networking_secgroup_v2.this.id
   direction         = "ingress"
   ethertype         = "IPv4"
@@ -43,6 +47,7 @@ resource "openstack_networking_secgroup_rule_v2" "https" {
 }
 
 resource "openstack_compute_instance_v2" "this" {
+  region              = var.region
   name                = var.name
   flavor_name         = var.flavor_name
   image_name          = var.image_name

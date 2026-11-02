@@ -10,6 +10,7 @@ module "server" {
   count  = var.server_enabled ? 1 : 0
 
   name            = "tramelya-demo-1"
+  region          = var.region
   flavor_name     = var.flavor_name
   ssh_public_keys = var.ssh_public_keys
   admin_cidrs     = var.admin_cidrs

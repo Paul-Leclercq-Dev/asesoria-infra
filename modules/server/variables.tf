@@ -1,3 +1,8 @@
+variable "region" {
+  description = "Région OpenStack. Écrite sur chaque ressource : la changer force leur recréation dans la nouvelle région (sinon Terraform garderait l'ancienne, mémorisée dans le state)."
+  type        = string
+}
+
 variable "name" {
   description = "Nom de l'instance (sert aussi de hostname et de nom de nœud k3s)."
   type        = string
