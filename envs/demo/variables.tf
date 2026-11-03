@@ -37,9 +37,9 @@ variable "k3s_channel" {
 }
 
 variable "ssl_mode" {
-  description = "`full` en 4.1 (certificat auto-signé de Traefik), `strict` en 4.2 (cert-manager)."
+  description = "`strict` depuis 4.2a : Cloudflare exige un certificat valide (Let's Encrypt, cert-manager). `full` = plan B (émetteur staging, voir asesoria-gitops docs/bootstrap.fr.md §9)."
   type        = string
-  default     = "full"
+  default     = "strict"
 }
 
 variable "contact_forward_to" {
