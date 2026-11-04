@@ -10,9 +10,11 @@ Le CRM range chaque pièce envoyée (passeport, TIE, contrat…) dans un **bucke
 
 ## Mise en place (une fois)
 
+Jeton d'API OVH : en créer un **neuf** (celui du bootstrap ne valait qu'un jour), avec la même URL que `docs/bootstrap.fr.md` §1 (droits limités à `/cloud/project/<PROJECT_ID>/*`), nom `tramelya-terraform-demo-data`, validité 1 jour. Symptôme d'un jeton expiré ou créé pour un autre projet : `403 Client::Forbidden: "This call has not been granted"` au premier `apply` (rien n'est créé ; refaire `plan` puis `apply` avec le nouveau jeton).
+
 ```bash
 cd ~/dev/asesoria-infra/envs/demo-data
-cp .env.example .env                  # remplir : state (AWS_*) + jeton OVH (OVH_*), comme bootstrap/
+cp .env.example .env                  # remplir : state (AWS_*) + un jeton OVH NEUF (OVH_*), voir ci-dessous
 cp terraform.tfvars.example terraform.tfvars   # remplir ovh_project_id
 set -a; . ./.env; set +a
 terraform init -backend-config=../../backend.hcl -backend-config="key=demo-data/terraform.tfstate"

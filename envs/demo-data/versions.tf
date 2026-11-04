@@ -13,7 +13,7 @@ terraform {
 }
 
 # Identifiants : OVH_APPLICATION_KEY, OVH_APPLICATION_SECRET, OVH_CONSUMER_KEY
-# (le même jeton d'API limité à /cloud/project/<id>/* que bootstrap/).
+# (jeton NEUF, mêmes droits que celui de bootstrap/ : /cloud/project/<id>/*, voir docs/storage.fr.md).
 provider "ovh" {
   endpoint = "ovh-eu"
 }
